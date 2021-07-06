@@ -1,12 +1,12 @@
 function newSwarm=updateSwarm(swarm,swarmPBest,GBest,dists,omega,c1,c2)
-%% ¸üÐÂswarm£¬°üÀ¨position£¬velocity£¬²¢ÇÒ¼ÆËãÃ¿ÌõpositionµÄlength¡£
+%% æ›´æ–°swarmï¼ŒåŒ…æ‹¬positionï¼Œvelocityï¼Œå¹¶ä¸”è®¡ç®—æ¯æ¡positionçš„lengthã€‚
 swarmPos=swarm{1,1};
 newSwarmVel=updateSwarmVel(swarm,swarmPBest,GBest,omega,c1,c2);
 newSwarmPos=updateSwarmPos(swarmPos,newSwarmVel,dists);
 newSwarmLen=calSwarmLen(newSwarmPos,dists);
 newSwarm={newSwarmPos,newSwarmLen};
 
-    %% ¼ÆËãswarmÖÐËùÓÐparticleµÄvelocity
+    %% è®¡ç®—swarmä¸­æ‰€æœ‰particleçš„velocity
     function newSwarmVel=updateSwarmVel(swarm,swarmPBest,GBest,omega,c1,c2)
         
         swarmPos1=swarm{1,1};
@@ -17,7 +17,7 @@ newSwarm={newSwarmPos,newSwarmLen};
         for i1=1:numSwarm
             newSwarmVel{1,i1}=updateVel(swarmPos1(:,:,i1),swarmPBestPos(:,:,i1),GBestPos,omega,c1,c2);
         end
-        %% ¼ÆËãswarmÖÐÄ³particleµÄvelocity
+        %% è®¡ç®—swarmä¸­æŸparticleçš„velocity
         function vel=updateVel(pos,PBestPos,GBestPos,omega,c1,c2)
             numPos=length(pos(:,1));
             v1=calIniVel(numPos);
@@ -27,7 +27,7 @@ newSwarm={newSwarmPos,newSwarmLen};
             vel=velPlusVel(numPos,v1,v2);
             vel=velPlusVel(numPos,vel,v3);
             
-            %% ³õÊ¼»¯µ¥¸öparticleµÄvelocity
+            %% åˆå§‹åŒ–å•ä¸ªparticleçš„velocity
             function vel=calIniVel(numPos)
                 index=1;
                 vel=[];
@@ -49,7 +49,7 @@ newSwarm={newSwarmPos,newSwarmLen};
                 vel(:,3)=possibilities;
             end
             
-            %% position-position²Ù×÷£¬Éú³ÉÐÂµÄvelocity
+            %% position-positionæ“ä½œï¼Œç”Ÿæˆæ–°çš„velocity
             function vel=posMinusPos(c,pos1,pos2)
                 pos1=getSymPos(pos1);
                 pos2=getSymPos(pos2);
@@ -58,13 +58,13 @@ newSwarm={newSwarmPos,newSwarmLen};
                 possibilities(possibilities>1)=1;
                 vel(:,3)=possibilities;
                 
-                %% µÃµ½¶Ô³ÆµÄpos
+                %% å¾—åˆ°å¯¹ç§°çš„pos
                 function pos=getSymPos(pos)
                     symPos=[pos(:,2) pos(:,1)];
                     pos=[pos;symPos];
                     pos=sortVelOrPos(pos);
                 end
-                %% ¼ìÑépos2ÖÐÊÇ·ñ´æÔÚpos1ÖÐÃ»ÓÐµÄ¶ÎµÄ×Óº¯Êý£¬¼´Îªpos2-pos1²Ù×÷
+                %% æ£€éªŒpos2ä¸­æ˜¯å¦å­˜åœ¨pos1ä¸­æ²¡æœ‰çš„æ®µçš„å­å‡½æ•°ï¼Œå³ä¸ºpos2-pos1æ“ä½œ
                 function pos2=examine(pos1,pos2)
                     index=1;
                     while index<=length(pos2(:,1))
@@ -78,7 +78,7 @@ newSwarm={newSwarmPos,newSwarmLen};
                     end
                 end
             end
-            %% velocity+velocity²Ù×÷
+            %% velocity+velocityæ“ä½œ
             function vel=velPlusVel(numPoints,vel1,vel2)
                 vel=[];
                 for i2=1:numPoints
@@ -124,7 +124,7 @@ newSwarm={newSwarmPos,newSwarmLen};
                     end
                 end
                 vel=avoidInconsistency(vel); % avoiding inconsistency of the velocities of different dimensions
-                %% ¶ÔÓÚsymmetry TSP£¬velocity¿ÉÄÜ´æÔÚinconsistency of the velocities of different dimensionsµÄÎÊÌâ£¬½â¾öÈçÏÂ
+                %% å¯¹äºŽsymmetry TSPï¼Œvelocityå¯èƒ½å­˜åœ¨inconsistency of the velocities of different dimensionsçš„é—®é¢˜ï¼Œè§£å†³å¦‚ä¸‹
                 function vel=avoidInconsistency(vel)
                     symVel=vel(:,[2 1 3]);
                     index3=1;
@@ -156,14 +156,14 @@ newSwarm={newSwarmPos,newSwarmLen};
             end
         end
     end
-    %% ¸üÐÂswarmµÄpos£¬¼´²úÉúÐÂµÄÂ·¾¶
+    %% æ›´æ–°swarmçš„posï¼Œå³äº§ç”Ÿæ–°çš„è·¯å¾„
     function newSwarmPos=updateSwarmPos(swarmPos,newSwarmVel,dists)
         
         numSwarm=length(swarmPos(1,1,:));
         for i3=1:numSwarm
             newSwarmPos(:,:,i3)=updatePos(swarmPos(:,:,i3),newSwarmVel{1,i3},dists);
         end
-        %% ¸üÐÂpos£¬¼´²úÉúÒ»¸öÐÂµÄÂ·¾¶
+        %% æ›´æ–°posï¼Œå³äº§ç”Ÿä¸€ä¸ªæ–°çš„è·¯å¾„
         function newPos=updatePos(pos,vel,dists)
             newPos=[];
             numPos=length(pos(:,1));
@@ -207,7 +207,7 @@ newSwarm={newSwarmPos,newSwarmLen};
                     newPos=[newPos;[currentDim,newPos(1,1)]];
                 end
             end
-            %% ÓÃÓÚÏû³ýcut»òÕßposÖÐÒÑ¾­±»Ñ¡¹ýµÄ±ßµÄ×Óº¯Êý
+            %% ç”¨äºŽæ¶ˆé™¤cutæˆ–è€…posä¸­å·²ç»è¢«é€‰è¿‡çš„è¾¹çš„å­å‡½æ•°
             function cut=eliminate(newPos,currentDim,cut)
                 newPos(:,2)=[];
                 newPos=[newPos,ones(length(newPos(:,1)),1)*currentDim];
@@ -221,7 +221,7 @@ newSwarm={newSwarmPos,newSwarmLen};
                     cut([index5 index6],:)=[];
                 end
             end
-            %% É¸Ñ¡³ö×î¶ÌµÄ±ßµÄ×Óº¯Êý
+            %% ç­›é€‰å‡ºæœ€çŸ­çš„è¾¹çš„å­å‡½æ•°
             function e=getShortestArc(pos,dists)
                 tempDists=[];
                 for i5=1:length(pos(:,1))
